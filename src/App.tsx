@@ -44,6 +44,7 @@ import { SavedPage } from "./pages/SavedPage";
 import { seedListings } from "./data";
 import { auth, db, firebaseConfigured } from "./firebase";
 import { Listing, Tab } from "./types";
+import { SupportChatButton, SupportChatModal } from "./features/support-chatbot";
 
 async function registerUser(user: User) {
   if (!db) return;
@@ -74,6 +75,7 @@ export default function App() {
   const [sellOpen, setSellOpen] = useState(false);
   const [authError, setAuthError] = useState("");
   const [profileReady, setProfileReady] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
 
   useEffect(() => {
     const firebaseAuth = auth;
@@ -281,6 +283,11 @@ export default function App() {
         visible={sellOpen}
         onClose={() => setSellOpen(false)}
         onSubmit={publish}
+      />
+      <SupportChatButton onPress={() => setSupportOpen(true)} />
+      <SupportChatModal
+        visible={supportOpen}
+        onClose={() => setSupportOpen(false)}
       />
     </SafeAreaView>
   );
