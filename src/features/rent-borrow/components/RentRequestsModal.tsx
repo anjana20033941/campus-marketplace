@@ -30,8 +30,9 @@ export function RentRequestsModal({
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!visible || !sellerId) return;
-    const unsubscribe = subscribeToIncomingRentRequests(sellerId, (data) => {
+    if (!visible) return;
+    const effectiveSellerId = sellerId || "demo-seller";
+    const unsubscribe = subscribeToIncomingRentRequests(effectiveSellerId, (data) => {
       setRequests(data);
     });
     return () => unsubscribe();

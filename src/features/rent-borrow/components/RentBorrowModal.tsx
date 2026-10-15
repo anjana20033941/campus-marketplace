@@ -40,10 +40,6 @@ export function RentBorrowModal({
   if (!item) return null;
 
   const handleSubmit = async () => {
-    if (!currentUserId) {
-      setError("Please sign in first to send a rent or borrow request.");
-      return;
-    }
     if (!duration.trim()) {
       setError("Please enter the duration (e.g. 3 days, 1 week).");
       return;
@@ -56,11 +52,14 @@ export function RentBorrowModal({
     setLoading(true);
     setError("");
 
+    const effectiveUserId = currentUserId || "guest-student-01";
+    const effectiveUserName = currentUserName || "Campus Student (Guest)";
+
     try {
       await sendRentBorrowRequest({
         listing: item,
-        requesterId: currentUserId,
-        requesterName: currentUserName || "Campus Student",
+        requesterId: effectiveUserId,
+        requesterName: effectiveUserName,
         requesterEmail: currentUserEmail,
         type: requestType,
         duration: duration.trim(),

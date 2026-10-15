@@ -21,6 +21,7 @@ export function ExplorePage({
   onSave,
   onOpen,
   onProfile,
+  onOpenRentRequests,
 }: {
   items: Listing[];
   query: string;
@@ -31,19 +32,28 @@ export function ExplorePage({
   onSave: (id: string) => void;
   onOpen: (item: Listing) => void;
   onProfile: () => void;
+  onOpenRentRequests?: () => void;
 }) {
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={styles.eyebrow}>CAMPUS MARKETPLACE</Text>
           <Text style={styles.heading}>
             Find your next{"\n"}favorite thing.
           </Text>
         </View>
-        <Pressable style={styles.avatar} onPress={onProfile}>
-          <Text style={styles.avatarText}>?</Text>
-        </Pressable>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          {onOpenRentRequests && (
+            <Pressable style={styles.rentReqBtn} onPress={onOpenRentRequests}>
+              <Text style={styles.rentReqIcon}>🤝</Text>
+              <Text style={styles.rentReqText}>Rent Requests</Text>
+            </Pressable>
+          )}
+          <Pressable style={styles.avatar} onPress={onProfile}>
+            <Text style={styles.avatarText}>?</Text>
+          </Pressable>
+        </View>
       </View>
       <View style={styles.search}>
         <Text style={styles.icon}>⌕</Text>
@@ -139,6 +149,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarText: { color: "#225347", fontWeight: "800" },
+  rentReqBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#E2F0EA",
+    borderWidth: 1,
+    borderColor: "#C5E1D4",
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 20,
+    gap: 4,
+  },
+  rentReqIcon: { fontSize: 13 },
+  rentReqText: { color: "#1C7057", fontSize: 11, fontWeight: "700" },
   search: {
     height: 52,
     backgroundColor: "#FFF",

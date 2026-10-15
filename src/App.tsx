@@ -45,6 +45,8 @@ import { seedListings } from "./data";
 import { auth, db, firebaseConfigured } from "./firebase";
 import { Listing, Tab } from "./types";
 import { SupportChatButton, SupportChatModal } from "./features/support-chatbot";
+import { RentBorrowModal, RentRequestsModal } from "./features/rent-borrow";
+import { ConditionReviewsSection } from "./features/condition-rating";
 
 async function registerUser(user: User) {
   if (!db) return;
@@ -76,6 +78,8 @@ export default function App() {
   const [authError, setAuthError] = useState("");
   const [profileReady, setProfileReady] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
+  const [rentModalOpen, setRentModalOpen] = useState(false);
+  const [rentRequestsOpen, setRentRequestsOpen] = useState(false);
 
   useEffect(() => {
     const firebaseAuth = auth;
@@ -137,11 +141,20 @@ export default function App() {
     () =>
       items.filter(
         (item) =>
+          (item as any).isAvailable !== false &&
           (category === "All items" || item.category === category) &&
           item.title.toLowerCase().includes(queryText.toLowerCase()),
       ),
     [category, items, queryText],
   );
+
+  const handleListingUpdated = (listingId: string) => {
+    setItems((current) =>
+      current.map((item) =>
+        item.id === listingId ? ({ ...item, isAvailable: false } as Listing) : item
+      )
+    );
+  };
   const myListings = useMemo(
     () => (user ? items.filter((item) => item.sellerId === user.uid) : []),
     [items, user],
@@ -228,6 +241,7 @@ export default function App() {
           onSave={toggleSaved}
           onOpen={setSelected}
           onProfile={() => setTab("Profile")}
+          onOpenRentRequests={() => setRentRequestsOpen(true)}
         />
       )}
       {tab === "Saved" && (
@@ -272,6 +286,21 @@ export default function App() {
         user={user}
         onClose={() => setSelected(null)}
         onContact={contactSeller}
+        onRentBorrow={() => setRentModalOpen(true)}
+      />
+      <RentBorrowModal
+        visible={rentModalOpen}
+        item={selected}
+        currentUserId={user?.uid || null}
+        currentUserName={user?.displayName || "Campus Student"}
+        currentUserEmail={user?.email || undefined}
+        onClose={() => setRentModalOpen(false)}
+      />
+      <RentRequestsModal
+        visible={rentRequestsOpen}
+        sellerId={user?.uid || null}
+        onClose={() => setRentRequestsOpen(false)}
+        onListingUpdated={handleListingUpdated}
       />
       <AuthModal
         visible={authOpen}
@@ -364,11 +393,13 @@ function ListingModal({
   user,
   onClose,
   onContact,
+  onRentBorrow,
 }: {
   item: Listing | null;
   user: User | null;
   onClose: () => void;
   onContact: () => void;
+  onRentBorrow: () => void;
 }) {
   return (
     <Modal
@@ -380,28 +411,52 @@ function ListingModal({
       {item && (
         <View style={styles.backdrop}>
           <View style={styles.detail}>
-            <Image source={{ uri: item.image }} style={styles.detailImage} />
-            <Pressable style={styles.close} onPress={onClose}>
-              <Text style={styles.closeText}>×</Text>
-            </Pressable>
-            <View style={styles.detailBody}>
-              <Text style={styles.detailCategory}>
-                {item.category.toUpperCase()}
-              </Text>
-              <Text style={styles.detailTitle}>{item.title}</Text>
-              <Text style={styles.detailPrice}>${item.price}</Text>
-              <Text style={styles.muted}>
-                {item.condition} · {item.campus} · {item.seller}
-              </Text>
-              <Text style={styles.description}>{item.description}</Text>
-              <Pressable style={styles.primary} onPress={onContact}>
-                <Text style={styles.primaryText}>
-                  {user
-                    ? `Message ${item.seller}`
-                    : "Sign in to contact seller"}
-                </Text>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 28 }}
+            >
+              <Image source={{ uri: item.image }} style={styles.detailImage} />
+              <Pressable style={styles.close} onPress={onClose}>
+                <Text style={styles.closeText}>×</Text>
               </Pressable>
-            </View>
+              <View style={styles.detailBody}>
+                <Text style={styles.detailCategory}>
+                  {item.category.toUpperCase()}
+                </Text>
+                <Text style={styles.detailTitle}>{item.title}</Text>
+                <Text style={styles.detailPrice}>${item.price}</Text>
+                <Text style={styles.muted}>
+                  {item.condition} · {item.campus} · {item.seller}
+                </Text>
+                <Text style={styles.description}>{item.description}</Text>
+
+                {/* Member 1: Rent or Borrow Action */}
+                <Pressable
+                  style={styles.rentBorrowBtn}
+                  onPress={onRentBorrow}
+                >
+                  <Text style={styles.rentBorrowBtnText}>
+                    🤝 Request Rent or Borrow (කුලියට / ණයට)
+                  </Text>
+                </Pressable>
+
+                {/* Message Seller Action */}
+                <Pressable style={styles.primary} onPress={onContact}>
+                  <Text style={styles.primaryText}>
+                    {user
+                      ? `Message ${item.seller}`
+                      : "Sign in to contact seller"}
+                  </Text>
+                </Pressable>
+
+                {/* Member 3: Buyer-Verified Condition Rating */}
+                <ConditionReviewsSection
+                  listingId={item.id}
+                  listingTitle={item.title}
+                  currentUserName={user?.displayName || "Campus Student"}
+                />
+              </View>
+            </ScrollView>
           </View>
         </View>
       )}
@@ -498,7 +553,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 82,
+    height: Platform.OS === "android" ? 92 : 82,
+    paddingBottom: Platform.OS === "android" ? 22 : 8,
     backgroundColor: "#FFF",
     borderTopWidth: 1,
     borderTopColor: "#E8EBE5",
@@ -538,6 +594,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   detail: {
+    maxHeight: "88%",
     backgroundColor: "#FFF",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
@@ -582,13 +639,28 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     marginVertical: 20,
   },
+  rentBorrowBtn: {
+    height: 50,
+    backgroundColor: "#E2F0EA",
+    borderWidth: 1.5,
+    borderColor: "#1C7057",
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  rentBorrowBtnText: {
+    color: "#1C7057",
+    fontWeight: "800",
+    fontSize: 14,
+  },
   primary: {
     height: 50,
     backgroundColor: "#1F5D4C",
     borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 10,
   },
   primaryText: { color: "#FFF", fontWeight: "800" },
   auth: { backgroundColor: "#FFF", borderRadius: 20, padding: 24, margin: 20 },

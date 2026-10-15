@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 export function SupportChatButton({
   onPress,
@@ -19,7 +19,7 @@ export function SupportChatButton({
 const styles = StyleSheet.create({
   floatingButton: {
     position: "absolute",
-    bottom: 84, // Positioned neatly above the bottom navigation bar
+    bottom: Platform.OS === "android" ? 102 : 90, // Neatly above Android bottom nav bar
     right: 16,
     flexDirection: "row",
     alignItems: "center",
