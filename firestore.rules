@@ -3,10 +3,16 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
     function owns(userId) { return signedIn() && request.auth.uid == userId; }
+    function isUniversityVerified() {
+      return signedIn() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.universityVerified == true ||
+        request.auth.token.email_verified == true
+      );
+    }
 
     match /listings/{listingId} {
       allow read: if true;
-      allow create: if signedIn() && request.resource.data.sellerId == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.sellerId == request.auth.uid && isUniversityVerified();
       allow update, delete: if signedIn() && resource.data.sellerId == request.auth.uid;
     }
 
@@ -19,10 +25,16 @@ service cloud.firestore {
     }
 
     match /conversations/{conversationId} {
-      allow read, write: if signedIn() && request.auth.uid in resource.data.memberIds;
+      allow read, write: if signedIn() && request.auth.uid in resource.data.memberIds && isUniversityVerified();
       match /messages/{messageId} {
         allow read, create: if signedIn() && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.memberIds;
       }
+    }
+
+    match /rentRequests/{requestId} {
+      allow read: if signedIn() && (request.auth.uid == resource.data.sellerId || request.auth.uid == resource.data.requesterId);
+      allow create: if signedIn() && request.resource.data.requesterId == request.auth.uid && isUniversityVerified();
+      allow update: if signedIn() && (request.auth.uid == resource.data.sellerId || request.auth.uid == resource.data.requesterId);
     }
   }
 }

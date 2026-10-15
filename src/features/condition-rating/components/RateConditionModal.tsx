@@ -12,10 +12,10 @@ import { VerifiedConditionLevel } from "../types";
 import { StarRating } from "./StarRating";
 
 const CONDITION_OPTIONS: VerifiedConditionLevel[] = [
-  "As Claimed (ප්‍රකාශ කළ පරිදිමයි)",
-  "Better than Expected (හොඳ තත්ත්වයේ)",
-  "Slightly Worn (සුළු වශයෙන් භාවිත කළ)",
-  "Heavily Worn (වැඩිපුර භාවිත කළ)",
+  "As Claimed",
+  "Better than Expected",
+  "Slightly Worn",
+  "Heavily Worn",
 ];
 
 export function RateConditionModal({
@@ -34,9 +34,7 @@ export function RateConditionModal({
   onSuccess?: () => void;
 }) {
   const [rating, setRating] = useState(5);
-  const [condition, setCondition] = useState<VerifiedConditionLevel>(
-    "As Claimed (ප්‍රකාශ කළ පරිදිමයි)"
-  );
+  const [condition, setCondition] = useState<VerifiedConditionLevel>("As Claimed");
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
 

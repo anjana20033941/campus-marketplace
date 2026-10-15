@@ -123,7 +123,7 @@ export function RentBorrowModal({
                   <Text
                     style={[styles.typeButtonText, requestType === "borrow" && styles.typeButtonTextActive]}
                   >
-                    Borrow (ණයට)
+                    Borrow
                   </Text>
                 </Pressable>
                 <Pressable
@@ -133,7 +133,7 @@ export function RentBorrowModal({
                   <Text
                     style={[styles.typeButtonText, requestType === "rent" && styles.typeButtonTextActive]}
                   >
-                    Rent (කුලියට)
+                    Rent
                   </Text>
                 </Pressable>
               </View>

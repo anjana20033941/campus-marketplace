@@ -1,8 +1,8 @@
 export type VerifiedConditionLevel =
-  | "As Claimed (ප්‍රකාශ කළ පරිදිමයි)"
-  | "Better than Expected (හොඳ තත්ත්වයේ)"
-  | "Slightly Worn (සුළු වශයෙන් භාවිත කළ)"
-  | "Heavily Worn (වැඩිපුර භාවිත කළ)";
+  | "As Claimed"
+  | "Better than Expected"
+  | "Slightly Worn"
+  | "Heavily Worn";
 
 export interface ConditionRating {
   id: string;

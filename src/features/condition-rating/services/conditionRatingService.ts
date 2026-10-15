@@ -8,7 +8,7 @@ const initialRatings: ConditionRating[] = [
     reviewerId: "user-101",
     reviewerName: "Nimesh P.",
     rating: 5,
-    verifiedCondition: "As Claimed (ප්‍රකාශ කළ පරිදිමයි)",
+    verifiedCondition: "As Claimed",
     comment: "Pages are clean, no pencil marks. Binding is solid. Highly recommend!",
     createdAt: Date.now() - 86400000 * 2,
   },
@@ -18,7 +18,7 @@ const initialRatings: ConditionRating[] = [
     reviewerId: "user-102",
     reviewerName: "Shanika K.",
     rating: 4,
-    verifiedCondition: "As Claimed (ප්‍රකාශ කළ පරිදිමයි)",
+    verifiedCondition: "As Claimed",
     comment: "Cover has slight edge wear but contents are in crisp, perfect condition.",
     createdAt: Date.now() - 86400000 * 5,
   },
@@ -28,7 +28,7 @@ const initialRatings: ConditionRating[] = [
     reviewerId: "user-103",
     reviewerName: "Dulshan A.",
     rating: 5,
-    verifiedCondition: "Better than Expected (හොඳ තත්ත්වයේ)",
+    verifiedCondition: "Better than Expected",
     comment: "Wood finish is pristine and sturdy. Looks even better than in photos.",
     createdAt: Date.now() - 86400000 * 3,
   },
@@ -38,7 +38,7 @@ const initialRatings: ConditionRating[] = [
     reviewerId: "user-104",
     reviewerName: "Kavindi M.",
     rating: 5,
-    verifiedCondition: "As Claimed (ප්‍රකාශ කළ පරිදිමයි)",
+    verifiedCondition: "As Claimed",
     comment: "Battery lasts all day, ANC works flawlessly. Great seller!",
     createdAt: Date.now() - 86400000 * 1,
   },
@@ -66,8 +66,8 @@ export function getConditionRatingSummary(listingId: string): ListingRatingSumma
   const avg = Math.round((sum / ratings.length) * 10) / 10;
   const accurateCount = ratings.filter(
     (r) =>
-      r.verifiedCondition === "As Claimed (ප්‍රකාශ කළ පරිදිමයි)" ||
-      r.verifiedCondition === "Better than Expected (හොඳ තත්ත්වයේ)"
+      r.verifiedCondition === "As Claimed" ||
+      r.verifiedCondition === "Better than Expected"
   ).length;
   const accuracyPct = Math.round((accurateCount / ratings.length) * 100);
 

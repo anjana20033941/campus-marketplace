@@ -47,6 +47,12 @@ import { Listing, Tab } from "./types";
 import { SupportChatButton, SupportChatModal } from "./features/support-chatbot";
 import { RentBorrowModal, RentRequestsModal } from "./features/rent-borrow";
 import { ConditionReviewsSection } from "./features/condition-rating";
+import { ItemCondition, filterMarketplaceItems } from "./features/condition-filter";
+import {
+  UniversitySelectionModal,
+  VerifiedBadge,
+  isUserUniversityVerified,
+} from "./features/university-verification";
 
 async function registerUser(user: User) {
   if (!db) return;
@@ -80,13 +86,19 @@ export default function App() {
   const [supportOpen, setSupportOpen] = useState(false);
   const [rentModalOpen, setRentModalOpen] = useState(false);
   const [rentRequestsOpen, setRentRequestsOpen] = useState(false);
+  const [selectedCondition, setSelectedCondition] =
+    useState<ItemCondition>("All conditions");
+  const [verifyModalOpen, setVerifyModalOpen] = useState(false);
 
   useEffect(() => {
     const firebaseAuth = auth;
     if (!firebaseAuth) return;
     const handleUser = (nextUser: User | null) => {
       setUser(nextUser);
-      if (nextUser)
+      if (nextUser) {
+        if (!isUserUniversityVerified(nextUser)) {
+          setVerifyModalOpen(true);
+        }
         registerUser(nextUser)
           .then(() => setProfileReady(true))
           .catch((error) =>
@@ -96,7 +108,7 @@ export default function App() {
                 : "Could not create profile.",
             ),
           );
-      else setProfileReady(false);
+      } else setProfileReady(false);
     };
     let unsubscribe: () => void = () => undefined;
     setPersistence(firebaseAuth, browserLocalPersistence)
@@ -139,13 +151,13 @@ export default function App() {
 
   const filteredItems = useMemo(
     () =>
-      items.filter(
-        (item) =>
-          (item as any).isAvailable !== false &&
-          (category === "All items" || item.category === category) &&
-          item.title.toLowerCase().includes(queryText.toLowerCase()),
-      ),
-    [category, items, queryText],
+      filterMarketplaceItems({
+        items,
+        category,
+        condition: selectedCondition,
+        query: queryText,
+      }),
+    [items, category, selectedCondition, queryText]
   );
 
   const handleListingUpdated = (listingId: string) => {
@@ -235,9 +247,11 @@ export default function App() {
           items={filteredItems}
           query={queryText}
           category={category}
+          selectedCondition={selectedCondition}
           savedIds={savedIds}
           onQueryChange={setQueryText}
           onCategoryChange={setCategory}
+          onConditionChange={setSelectedCondition}
           onSave={toggleSaved}
           onOpen={setSelected}
           onProfile={() => setTab("Profile")}
@@ -317,6 +331,17 @@ export default function App() {
       <SupportChatModal
         visible={supportOpen}
         onClose={() => setSupportOpen(false)}
+      />
+      <UniversitySelectionModal
+        visible={verifyModalOpen}
+        user={user}
+        onVerified={() => setVerifyModalOpen(false)}
+        onSwitchAccount={() => {
+          auth && signOut(auth);
+          setVerifyModalOpen(false);
+          setAuthOpen(true);
+        }}
+        onClose={() => setVerifyModalOpen(false)}
       />
     </SafeAreaView>
   );
@@ -425,18 +450,23 @@ function ListingModal({
                 </Text>
                 <Text style={styles.detailTitle}>{item.title}</Text>
                 <Text style={styles.detailPrice}>${item.price}</Text>
-                <Text style={styles.muted}>
-                  {item.condition} · {item.campus} · {item.seller}
-                </Text>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginVertical: 4 }}>
+                  <Text style={styles.muted}>
+                    {item.condition} · {item.campus} · {item.seller}
+                  </Text>
+                  <VerifiedBadge compact />
+                </View>
                 <Text style={styles.description}>{item.description}</Text>
 
                 {/* Member 1: Rent or Borrow Action */}
                 <Pressable
                   style={styles.rentBorrowBtn}
-                  onPress={onRentBorrow}
+                  onPress={user ? onRentBorrow : onContact}
                 >
                   <Text style={styles.rentBorrowBtnText}>
-                    🤝 Request Rent or Borrow (කුලියට / ණයට)
+                    {user
+                      ? "🤝 Request Rent or Borrow"
+                      : "Sign in to rent or borrow"}
                   </Text>
                 </Pressable>
 

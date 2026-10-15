@@ -1,6 +1,7 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Listing } from "../types";
 import { ConditionRatingBadge } from "../features/condition-rating";
+import { ConditionTag } from "../features/condition-filter";
 
 export function ListingCard({
   item,
@@ -34,10 +35,11 @@ export function ListingCard({
           </Text>
           <Text style={styles.price}>${item.price}</Text>
         </View>
-        <Text style={styles.muted}>
-          {item.condition} · {item.campus}
-        </Text>
-        <View style={{ marginTop: 4 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginVertical: 3 }}>
+          <ConditionTag condition={item.condition} />
+          <Text style={styles.muted}>· {item.campus}</Text>
+        </View>
+        <View style={{ marginTop: 2 }}>
           <ConditionRatingBadge listingId={item.id} />
         </View>
         <Text style={styles.tiny}>Listed by {item.seller}</Text>

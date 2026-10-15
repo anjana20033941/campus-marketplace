@@ -10,14 +10,17 @@ import {
 import { ListingCard } from "../components/ListingCard";
 import { categories } from "../data";
 import { Listing } from "../types";
+import { ConditionFilterBar, ItemCondition } from "../features/condition-filter";
 
 export function ExplorePage({
   items,
   query,
   category,
+  selectedCondition = "All conditions",
   savedIds,
   onQueryChange,
   onCategoryChange,
+  onConditionChange,
   onSave,
   onOpen,
   onProfile,
@@ -26,9 +29,11 @@ export function ExplorePage({
   items: Listing[];
   query: string;
   category: string;
+  selectedCondition?: ItemCondition;
   savedIds: string[];
   onQueryChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
+  onConditionChange?: (condition: ItemCondition) => void;
   onSave: (id: string) => void;
   onOpen: (item: Listing) => void;
   onProfile: () => void;
@@ -97,6 +102,14 @@ export function ExplorePage({
           </Pressable>
         ))}
       </ScrollView>
+
+      {onConditionChange && (
+        <ConditionFilterBar
+          selectedCondition={selectedCondition}
+          onConditionChange={onConditionChange}
+        />
+      )}
+
       <FlatList
         data={items}
         scrollEnabled={false}
