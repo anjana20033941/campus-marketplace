@@ -1,4 +1,6 @@
 import { StatusBar } from "expo-status-bar";
+import { SupportChatButton } from "./features/support-chatbot/components/SupportChatButton";
+import { SupportChatModal } from "./features/support-chatbot/components/SupportChatModal";
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
@@ -74,7 +76,7 @@ export default function App() {
   const [sellOpen, setSellOpen] = useState(false);
   const [authError, setAuthError] = useState("");
   const [profileReady, setProfileReady] = useState(false);
-
+  const [supportChatOpen, setSupportChatOpen] = useState(false);
   useEffect(() => {
     const firebaseAuth = auth;
     if (!firebaseAuth) return;
@@ -281,6 +283,14 @@ export default function App() {
         visible={sellOpen}
         onClose={() => setSellOpen(false)}
         onSubmit={publish}
+      />
+            <SupportChatButton
+        onPress={() => setSupportChatOpen(true)}
+      />
+
+      <SupportChatModal
+        visible={supportChatOpen}
+        onClose={() => setSupportChatOpen(false)}
       />
     </SafeAreaView>
   );
