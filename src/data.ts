@@ -26,7 +26,7 @@ export const seedListings: Listing[] = [
     price: 80,
     category: "Furniture",
     seller: "Jordan K.",
-    campus: "West Village",
+    campus: "North Campus",
     condition: "Good condition",
     image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800",
     description: "Solid walnut desk with room for a monitor and books.",

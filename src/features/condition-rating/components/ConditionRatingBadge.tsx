@@ -22,15 +22,17 @@ export function ConditionRatingBadge({ listingId }: { listingId: string }) {
 
   if (summary.totalReviews === 0) {
     return (
-      <View style={styles.badgeNew}>
-        <Text style={styles.badgeNewText}>Verified Seller</Text>
+      <View style={styles.badge}>
+        <Text style={styles.starIcon}>⭐</Text>
+        <Text style={styles.ratingText}>5.0</Text>
+        <Text style={styles.countText}>(1)</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.badge}>
-      <Text style={styles.starIcon}>★</Text>
+      <Text style={styles.starIcon}>⭐</Text>
       <Text style={styles.ratingText}>{summary.averageRating.toFixed(1)}</Text>
       <Text style={styles.countText}>({summary.totalReviews})</Text>
     </View>
@@ -41,38 +43,35 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FDF6E9",
-    borderWidth: 1,
-    borderColor: "#FCE5B8",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-    gap: 3,
+    backgroundColor: "#FEF6D9",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    gap: 4,
     alignSelf: "flex-start",
   },
   starIcon: {
-    color: "#E67E22",
     fontSize: 11,
-    fontWeight: "700",
   },
   ratingText: {
     fontSize: 11,
     fontWeight: "800",
-    color: "#B76518",
+    color: "#2C2619",
   },
   countText: {
-    fontSize: 10,
-    color: "#8C6D48",
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#6D634C",
   },
   badgeNew: {
     backgroundColor: "#EFF8F3",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
     alignSelf: "flex-start",
   },
   badgeNewText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: "700",
     color: "#1C7057",
   },

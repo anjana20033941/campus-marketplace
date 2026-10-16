@@ -375,13 +375,12 @@ function BottomNav({
       />
       <NavItem
         label="Messages"
-        icon="□"
+        icon="💬"
         active={tab === "Messages"}
         onPress={() => onChange("Messages")}
       />
       <Pressable style={styles.sellButton} onPress={onSell}>
-        <Text style={styles.sellPlus}>＋</Text>
-        <Text style={styles.sellText}>Sell</Text>
+        <Text style={styles.sellText}>+ Sell</Text>
       </Pressable>
     </View>
   );
@@ -401,7 +400,7 @@ function NavItem({
 }) {
   return (
     <Pressable style={styles.navItem} onPress={onPress}>
-      <View>
+      <View style={styles.iconContainer}>
         <Text style={[styles.navIcon, active && styles.navActive]}>{icon}</Text>
         {badge ? (
           <View style={styles.badge}>
@@ -409,7 +408,8 @@ function NavItem({
           </View>
         ) : null}
       </View>
-      <Text style={[styles.navLabel, active && styles.navActive]}>{label}</Text>
+      <Text style={[styles.navLabel, active && styles.navActiveText]}>{label}</Text>
+      {active ? <View style={styles.activeBar} /> : <View style={styles.activeBarPlaceholder} />}
     </Pressable>
   );
 }
@@ -577,25 +577,60 @@ function SellModal({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F8F8F4" },
+  container: { flex: 1, backgroundColor: "#F9FAF4" },
   nav: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    height: Platform.OS === "android" ? 92 : 82,
-    paddingBottom: Platform.OS === "android" ? 22 : 8,
-    backgroundColor: "#FFF",
+    height: Platform.OS === "android" ? 88 : 78,
+    paddingBottom: Platform.OS === "android" ? 18 : 6,
+    backgroundColor: "#FDFEF9",
     borderTopWidth: 1,
-    borderTopColor: "#E8EBE5",
+    borderTopColor: "#EBF1EC",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },
-  navItem: { alignItems: "center", minWidth: 54 },
-  navIcon: { color: "#83918A", fontSize: 22 },
-  navLabel: { color: "#83918A", fontSize: 10, marginTop: 3 },
-  navActive: { color: "#1D6B54" },
+  navItem: {
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: 60,
+  },
+  iconContainer: {
+    height: 24,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  navIcon: {
+    color: "#6D8177",
+    fontSize: 22,
+  },
+  navLabel: {
+    color: "#6D8177",
+    fontSize: 11,
+    fontWeight: "600",
+    marginTop: 2,
+  },
+  navActive: {
+    color: "#103C31",
+  },
+  navActiveText: {
+    color: "#103C31",
+    fontWeight: "800",
+  },
+  activeBar: {
+    width: 26,
+    height: 3,
+    backgroundColor: "#103C31",
+    borderRadius: 2,
+    marginTop: 4,
+  },
+  activeBarPlaceholder: {
+    width: 26,
+    height: 3,
+    marginTop: 4,
+  },
   badge: {
     position: "absolute",
     right: -12,
@@ -605,19 +640,27 @@ const styles = StyleSheet.create({
     minWidth: 16,
     height: 16,
     alignItems: "center",
+    justifyContent: "center",
   },
-  badgeText: { color: "#FFF", fontSize: 9, fontWeight: "800" },
+  badgeText: {
+    color: "#FFF",
+    fontSize: 9,
+    fontWeight: "800",
+  },
   sellButton: {
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "#E6F0E6",
+    height: 38,
+    borderRadius: 20,
+    backgroundColor: "#D6F1E4",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    gap: 4,
+    justifyContent: "center",
   },
-  sellPlus: { color: "#247055", fontSize: 20 },
-  sellText: { color: "#247055", fontWeight: "800", fontSize: 12 },
+  sellText: {
+    color: "#103C31",
+    fontWeight: "800",
+    fontSize: 13.5,
+  },
   backdrop: {
     flex: 1,
     backgroundColor: "rgba(15,40,33,.45)",

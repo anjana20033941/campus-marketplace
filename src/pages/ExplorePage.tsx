@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -41,42 +42,64 @@ export function ExplorePage({
 }) {
   return (
     <ScrollView contentContainerStyle={styles.content}>
+      {/* Top Header */}
       <View style={styles.header}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.topRow}>
           <Text style={styles.eyebrow}>CAMPUS MARKETPLACE</Text>
-          <Text style={styles.heading}>
-            Find your next{"\n"}favorite thing.
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          {onOpenRentRequests && (
-            <Pressable style={styles.rentReqBtn} onPress={onOpenRentRequests}>
-              <Text style={styles.rentReqIcon}>🤝</Text>
-              <Text style={styles.rentReqText}>Rent Requests</Text>
+          <View style={styles.topActions}>
+            {onOpenRentRequests && (
+              <Pressable style={styles.rentReqBtn} onPress={onOpenRentRequests}>
+                <Text style={styles.rentReqIcon}>🤝</Text>
+                <Text style={styles.rentReqText}>Rent Requests</Text>
+              </Pressable>
+            )}
+            <Pressable style={styles.iconCircle} onPress={onProfile}>
+              <Text style={styles.circleIconText}>⚙</Text>
             </Pressable>
-          )}
-          <Pressable style={styles.avatar} onPress={onProfile}>
-            <Text style={styles.avatarText}>?</Text>
-          </Pressable>
+          </View>
+        </View>
+
+        <View style={styles.heroRow}>
+          <View style={styles.headlineCol}>
+            <Text style={styles.heading}>
+              Find your{"\n"}next{"\n"}favorite{"\n"}thing.
+            </Text>
+          </View>
+          <View style={styles.illustrationCol}>
+            <Pressable style={styles.questionCircle} onPress={onProfile}>
+              <Text style={styles.questionText}>?</Text>
+            </Pressable>
+            <Image
+              source={require("../../assets/header-illustration.png")}
+              style={styles.heroImage}
+              resizeMode="contain"
+            />
+          </View>
         </View>
       </View>
+
+      {/* Search Bar */}
       <View style={styles.search}>
-        <Text style={styles.icon}>⌕</Text>
+        <Text style={styles.searchIcon}>🔍</Text>
         <TextInput
           value={query}
           onChangeText={onQueryChange}
           placeholder="Search textbooks, desks, tech..."
-          placeholderTextColor="#87918C"
+          placeholderTextColor="#86998F"
           style={styles.input}
         />
       </View>
+
+      {/* Browse Near You Section Header */}
       <View style={styles.section}>
         <View>
           <Text style={styles.sectionTitle}>Browse near you</Text>
           <Text style={styles.muted}>Good finds, close by</Text>
         </View>
-        <Text style={styles.seeAll}>{items.length} items</Text>
+        <Text style={styles.itemsCount}>{items.length} items</Text>
       </View>
+
+      {/* Category Filter Pills */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -103,6 +126,7 @@ export function ExplorePage({
         ))}
       </ScrollView>
 
+      {/* Condition Filter Bar */}
       {onConditionChange && (
         <ConditionFilterBar
           selectedCondition={selectedCondition}
@@ -110,6 +134,7 @@ export function ExplorePage({
         />
       )}
 
+      {/* Listings Grid */}
       <FlatList
         data={items}
         scrollEnabled={false}
@@ -132,88 +157,186 @@ export function ExplorePage({
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
-  content: { padding: 20, paddingBottom: 110 },
+  content: {
+    paddingHorizontal: 18,
+    paddingTop: 10,
+    paddingBottom: 120,
+    backgroundColor: "#F9FAF4",
+  },
   header: {
+    paddingTop: 16,
+    paddingBottom: 10,
+  },
+  topRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 28,
-    paddingBottom: 24,
+    alignItems: "center",
   },
   eyebrow: {
-    color: "#65766D",
+    color: "#5C7164",
     fontSize: 11,
     fontWeight: "700",
-    letterSpacing: 1.8,
-    marginBottom: 8,
+    letterSpacing: 1.5,
   },
-  heading: {
-    color: "#173C34",
-    fontSize: 30,
-    lineHeight: 34,
-    fontWeight: "800",
-  },
-  avatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: "#D6E5D7",
+  topActions: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    gap: 8,
   },
-  avatarText: { color: "#225347", fontWeight: "800" },
   rentReqBtn: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#E2F0EA",
-    borderWidth: 1,
-    borderColor: "#C5E1D4",
-    paddingHorizontal: 10,
-    paddingVertical: 7,
+    backgroundColor: "#D6F1E4",
+    paddingHorizontal: 12,
+    paddingVertical: 6.5,
     borderRadius: 20,
-    gap: 4,
+    gap: 5,
   },
-  rentReqIcon: { fontSize: 13 },
-  rentReqText: { color: "#1C7057", fontSize: 11, fontWeight: "700" },
+  rentReqIcon: {
+    fontSize: 13,
+  },
+  rentReqText: {
+    color: "#134638",
+    fontSize: 11.5,
+    fontWeight: "700",
+  },
+  iconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#D2EBE0",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circleIconText: {
+    color: "#174637",
+    fontSize: 17,
+  },
+  heroRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginTop: 10,
+  },
+  headlineCol: {
+    flex: 1,
+    paddingRight: 4,
+  },
+  heading: {
+    color: "#103C31",
+    fontSize: 32,
+    lineHeight: 36,
+    fontWeight: "800",
+    letterSpacing: -0.5,
+  },
+  illustrationCol: {
+    width: 175,
+    alignItems: "flex-end",
+    position: "relative",
+  },
+  questionCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#D2EBE0",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 6,
+    marginRight: 2,
+  },
+  questionText: {
+    color: "#174637",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  heroImage: {
+    width: 175,
+    height: 98,
+  },
   search: {
-    height: 52,
+    height: 50,
     backgroundColor: "#FFF",
-    borderRadius: 14,
+    borderRadius: 25,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: "#E6E9E2",
+    borderColor: "#E7EDE9",
+    marginTop: 16,
+    marginBottom: 26,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
+    elevation: 1,
   },
-  icon: { color: "#49635A", fontSize: 28, marginRight: 8 },
-  input: { flex: 1, color: "#173C34", fontSize: 14 },
+  searchIcon: {
+    fontSize: 15,
+    marginRight: 9,
+    opacity: 0.75,
+  },
+  input: {
+    flex: 1,
+    color: "#103C31",
+    fontSize: 13.5,
+    fontWeight: "500",
+  },
   section: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-    marginTop: 32,
     marginBottom: 16,
   },
   sectionTitle: {
-    color: "#173C34",
-    fontSize: 20,
+    color: "#103C31",
+    fontSize: 22,
     fontWeight: "800",
-    marginBottom: 4,
+    letterSpacing: -0.3,
   },
-  muted: { color: "#87918C", fontSize: 12 },
-  seeAll: { color: "#23775D", fontWeight: "700", fontSize: 12 },
-  categories: { gap: 8, paddingBottom: 22 },
+  muted: {
+    color: "#6B8275",
+    fontSize: 13,
+    marginTop: 3,
+  },
+  itemsCount: {
+    color: "#103C31",
+    fontWeight: "700",
+    fontSize: 13,
+  },
+  categories: {
+    gap: 8,
+    paddingBottom: 16,
+  },
   category: {
-    height: 36,
+    height: 38,
     justifyContent: "center",
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: "#ECEFE9",
+    backgroundColor: "#E2EFE7",
   },
-  activeCategory: { backgroundColor: "#1F5D4C" },
-  categoryText: { color: "#64736C", fontSize: 12, fontWeight: "700" },
-  activeText: { color: "#FFF" },
-  grid: { gap: 14 },
-  columns: { gap: 14 },
-  empty: { textAlign: "center", color: "#87918C", padding: 30 },
+  activeCategory: {
+    backgroundColor: "#134638",
+  },
+  categoryText: {
+    color: "#163C30",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  activeText: {
+    color: "#FFF",
+    fontWeight: "700",
+  },
+  grid: {
+    gap: 14,
+  },
+  columns: {
+    gap: 14,
+  },
+  empty: {
+    textAlign: "center",
+    color: "#87918C",
+    padding: 30,
+  },
 });

@@ -1,7 +1,6 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Listing } from "../types";
 import { ConditionRatingBadge } from "../features/condition-rating";
-import { ConditionTag } from "../features/condition-filter";
 
 export function ListingCard({
   item,
@@ -17,7 +16,7 @@ export function ListingCard({
   return (
     <Pressable style={styles.card} onPress={onOpen}>
       <View style={styles.photo}>
-        <Image source={{ uri: item.image }} style={styles.image} />
+        <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
         <Pressable
           accessibilityLabel={saved ? "Remove saved item" : "Save item"}
           style={styles.save}
@@ -35,14 +34,13 @@ export function ListingCard({
           </Text>
           <Text style={styles.price}>${item.price}</Text>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginVertical: 3 }}>
-          <ConditionTag condition={item.condition} />
-          <Text style={styles.muted}>· {item.campus}</Text>
+        <View style={styles.locationPill}>
+          <Text style={styles.pinIcon}>📍</Text>
+          <Text style={styles.locationText}>{item.campus}</Text>
         </View>
-        <View style={{ marginTop: 2 }}>
+        <View style={styles.ratingRow}>
           <ConditionRatingBadge listingId={item.id} />
         </View>
-        <Text style={styles.tiny}>Listed by {item.seller}</Text>
       </View>
     </Pressable>
   );
@@ -52,37 +50,91 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: "#FFF",
-    borderRadius: 16,
+    borderRadius: 18,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#E9ECE6",
+    borderColor: "#EEF3EF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
-  photo: { height: 148, backgroundColor: "#E5ECE5" },
-  image: { width: "100%", height: "100%" },
+  photo: {
+    height: 154,
+    backgroundColor: "#E5ECE5",
+    position: "relative",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
   save: {
     position: "absolute",
-    top: 10,
-    right: 10,
+    top: 9,
+    right: 9,
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "rgba(255,255,255,.92)",
+    backgroundColor: "#FFF",
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
-  heart: { color: "#365B4C", fontSize: 21 },
-  red: { color: "#C3535B" },
-  body: { padding: 12 },
-  row: { flexDirection: "row", justifyContent: "space-between", gap: 5 },
+  heart: {
+    color: "#184638",
+    fontSize: 19,
+    lineHeight: 22,
+  },
+  red: {
+    color: "#C3535B",
+  },
+  body: {
+    padding: 12,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: 4,
+  },
   title: {
     flex: 1,
-    minHeight: 34,
-    color: "#1B3A33",
+    color: "#0E382B",
     fontSize: 13,
     lineHeight: 17,
     fontWeight: "700",
   },
-  price: { color: "#1C7057", fontSize: 14, fontWeight: "800" },
-  muted: { color: "#87918C", fontSize: 12 },
-  tiny: { color: "#A0AAA4", fontSize: 10, marginTop: 5 },
+  price: {
+    color: "#0E382B",
+    fontSize: 15,
+    fontWeight: "800",
+    marginLeft: 4,
+  },
+  locationPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#E8F4EE",
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 3.5,
+    marginTop: 8,
+    gap: 4,
+    alignSelf: "flex-start",
+  },
+  pinIcon: {
+    fontSize: 10,
+  },
+  locationText: {
+    color: "#1A5240",
+    fontSize: 11,
+    fontWeight: "700",
+  },
+  ratingRow: {
+    marginTop: 6,
+  },
 });

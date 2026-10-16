@@ -11,7 +11,7 @@ export function ConditionFilterBar({
 }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.filterTitle}>Condition:</Text>
+      <Text style={styles.filterTitle}>CONDITION:</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -23,10 +23,7 @@ export function ConditionFilterBar({
             <Pressable
               key={cond}
               onPress={() => onConditionChange(cond)}
-              style={[
-                styles.chip,
-                isActive && styles.chipActive,
-              ]}
+              style={[styles.chip, isActive && styles.chipActive]}
             >
               <Text style={[styles.chipText, isActive && styles.chipTextActive]}>
                 {cond}
@@ -41,34 +38,31 @@ export function ConditionFilterBar({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 6,
+    marginBottom: 16,
   },
   filterTitle: {
     fontSize: 11,
-    fontWeight: "700",
-    color: "#687A72",
-    marginBottom: 6,
+    fontWeight: "800",
+    color: "#5C7164",
+    marginBottom: 8,
     textTransform: "uppercase",
-    letterSpacing: 0.8,
+    letterSpacing: 1.0,
   },
   scrollList: {
     gap: 8,
   },
   chip: {
-    backgroundColor: "#F1F5F3",
-    borderWidth: 1,
-    borderColor: "#DBE4DF",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    backgroundColor: "#E2EFE7",
+    paddingHorizontal: 15,
+    paddingVertical: 9,
+    borderRadius: 20,
   },
   chipActive: {
-    backgroundColor: "#1C7057",
-    borderColor: "#1C7057",
+    backgroundColor: "#134638",
   },
   chipText: {
-    fontSize: 12,
-    color: "#465951",
+    fontSize: 12.5,
+    color: "#163B30",
     fontWeight: "600",
   },
   chipTextActive: {
